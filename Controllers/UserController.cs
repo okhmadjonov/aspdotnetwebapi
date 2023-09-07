@@ -1,6 +1,7 @@
 ﻿using aspdotnetwebapi.DTO;
 using aspdotnetwebapi.Entities;
 using aspdotnetwebapi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace aspdotnetwebapi.Controllers
@@ -20,7 +21,7 @@ namespace aspdotnetwebapi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateUser(UserDto usersDto) => Ok(await _userRepository.CreateUserAsync(usersDto));
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
         public async Task<ActionResult> GetAllUsers() => Ok(await _userRepository.GetUserAllAsync() ?? new List<User?>());
 

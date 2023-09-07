@@ -2,7 +2,6 @@
 using aspdotnetwebapi.DTO;
 using aspdotnetwebapi.Entities;
 using aspdotnetwebapi.Interfaces;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 namespace aspdotnetwebapi.Repositories
 {
@@ -17,12 +16,32 @@ namespace aspdotnetwebapi.Repositories
         }
 
 
-        public async Task<User> CreateUserAsync(UserDto userDto)
+        public async Task<User> CreateUserAsync(UserDto request)
         {
-            var user = userDto.Adapt<User>();
-            await _dataContext.AddAsync(user);
+            //var user = userDto.Adapt<User>();
+            /* await _dataContext.AddAsync(user);
+             await _dataContext.SaveChangesAsync();
+             return user;*/
+
+
+            var salt = BCrypt.Net.BCrypt.GenerateSalt();
+            var passwordHash
+                = BCrypt.Net.BCrypt.HashPassword(request.Password, salt);
+
+            var user = new User
+            {
+                Id = new Guid(),
+                Name = request.Name,
+                Email = request.Email,
+                Password = passwordHash
+            };
+
+            await _dataContext.Users.AddAsync(user);
             await _dataContext.SaveChangesAsync();
             return user;
+
+
+
         }
 
         public async System.Threading.Tasks.Task DeleteUserAsync(Guid id)

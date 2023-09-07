@@ -14,13 +14,7 @@ namespace aspdotnetwebapi.Controllers
         private readonly IAuthRepository _authRepository;
         public AuthController(IAuthRepository authRepository) => _authRepository = authRepository;
 
-        /* [HttpGet, Authorize]
-         public ActionResult<string> GetMyName()
-         {
-             return Ok(CreateTokenInJwtAuthorizationFromUsers.GetMyId());
-         }
-         */
-        [HttpGet("ListUsers"), Authorize(Roles = "Admin, User")]
+        [HttpGet("ListUsers"), Authorize]
         public async Task<IActionResult> GetAllUsers() => Ok(await _authRepository.GetAllUsers());
 
         [HttpPost("register")]
@@ -29,8 +23,6 @@ namespace aspdotnetwebapi.Controllers
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto request) => Ok(await _authRepository.Login(request));
-
-
     }
 }
 

@@ -13,6 +13,8 @@ public static class CreateTokenInJwtAuthorizationFromUsers
     {
         List<Claim> claims = new List<Claim> {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, "Admin"),
+            new Claim(ClaimTypes.Role, "User"),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"));
@@ -23,7 +25,7 @@ public static class CreateTokenInJwtAuthorizationFromUsers
             claims: claims,
             expires: DateTime.Now.AddHours(7),
             signingCredentials: creds,
-         issuer: "http://localhost:5069/"
+            issuer: "http://localhost:5069/"
         );
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
